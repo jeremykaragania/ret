@@ -25,10 +25,17 @@ void list_free(struct list** list) {
   list_insert inserts the data "data" at the beginning of the list "list".
 */
 struct list* list_insert(struct list** list, void* data) {
-  struct list* ret = list_alloc(data);
+  struct list* ret;
 
-  ret->next = *list;
-  *list = ret;
+  if (!(*list)->data) {
+    ret = *list;
+    ret->data = data;
+  }
+  else {
+    ret = list_alloc(data);
+    ret->next = *list;
+    *list = ret;
+  }
 
   return ret;
 }
