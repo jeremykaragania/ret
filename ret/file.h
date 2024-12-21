@@ -24,6 +24,7 @@ struct buffer_info {
 struct segment_info {
   uint64_t addr;
   struct buffer_info buf;
+  struct file_info* file;
 };
 
 /*

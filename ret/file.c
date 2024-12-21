@@ -52,6 +52,7 @@ struct list* elf_segments_alloc(struct file_info* file, const Elf64_Ehdr* ehdr, 
       segment->addr = phdr->p_vaddr;
       segment->buf.addr = (void*)((uint64_t)file->buf.addr + phdr->p_offset);
       segment->buf.size = phdr->p_filesz;
+      segment->file = file;
 
       list_insert(segments, segment);
     }
