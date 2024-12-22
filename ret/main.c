@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 char* program = "ret";
-char* usage = "ret file";
+char* usage = "file";
 
 int main(int argc, char** argv) {
   struct file_info* file;
@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
   struct list* segments;
 
   if (argc != 2) {
-    fprintf(stderr, "Usage: %s\n", usage);
+    fprintf(stderr, "Usage: %s %s\n", argv[0], usage);
     exit(EXIT_FAILURE);
   }
 
