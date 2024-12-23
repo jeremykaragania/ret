@@ -35,6 +35,11 @@ int main(int argc, char** argv) {
     exit(EXIT_FAILURE);
   }
 
+  if (!is_elf_machine_valid(&header)) {
+    fprintf(stderr, "%s: error: File format not recognized\n", program);
+    exit(EXIT_FAILURE);
+  }
+
   segments = list_alloc(NULL);
 
   elf_segments_alloc(file, &header, &segments, PF_X);

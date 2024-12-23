@@ -47,6 +47,14 @@ int is_elf_ident_valid(Elf64_Ehdr* ehdr) {
 }
 
 /*
+  is_elf_machine_valid returns 1 if the machine specified by the header "ehdr"
+  is valid and 0 if it isn't.
+*/
+int is_elf_machine_valid(Elf64_Ehdr* ehdr) {
+  return ehdr->e_machine == 0x3e;
+}
+
+/*
   elf_segments_alloc allocates the ELF segments from the file specified by
   "file" and the Elf header specified by "ehdr" which have the flags "flags".
 */

@@ -41,6 +41,7 @@ void file_close(struct file_info* file);
 
 Elf64_Ehdr* elf_header_get(struct file_info* file, Elf64_Ehdr* ehdr);
 int is_elf_ident_valid(Elf64_Ehdr* ehdr);
+int is_elf_machine_valid(Elf64_Ehdr* ehdr);
 struct list* elf_segments_alloc(struct file_info* file, const Elf64_Ehdr* ehdr, struct list** segments, int flags);
 void elf_segments_free(struct list** segments);
 
