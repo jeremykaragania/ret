@@ -21,7 +21,8 @@ void print_search(struct list* segments) {
   };
 
   /*
-    If stdout refers to a terminal, then we don't print ANSI escape sequences.
+    If stdout doesn't refer to a terminal, then we don't print ANSI escape
+    sequences.
   */
   if (isatty(STDOUT_FILENO)) {
     format_0 = format_1;
