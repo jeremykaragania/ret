@@ -28,9 +28,15 @@ int main(int argc, char** argv) {
     exit(EXIT_FAILURE);
   }
 
+  elf_header_get(file, &header);
+
+  if (!is_elf_ident_valid(&header)) {
+    fprintf(stderr, "%s: error: Not an ELF file\n", program);
+    exit(EXIT_FAILURE);
+  }
+
   segments = list_alloc(NULL);
 
-  elf_header_get(file, &header);
   elf_segments_alloc(file, &header, &segments, PF_X);
 
   print_search(segments);

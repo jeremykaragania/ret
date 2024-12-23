@@ -39,6 +39,14 @@ Elf64_Ehdr* elf_header_get(struct file_info* file, Elf64_Ehdr* ehdr) {
 }
 
 /*
+  is_elf_ident_valid returns 1 if the identification specified by the header
+  "ehdr" is valid and 0 if it isn't.
+*/
+int is_elf_ident_valid(Elf64_Ehdr* ehdr) {
+  return ehdr->e_ident[EI_MAG0] == ELFMAG0 && ehdr->e_ident[EI_MAG1] == ELFMAG1 && ehdr->e_ident[EI_MAG2] == ELFMAG2 && ehdr->e_ident[EI_MAG3] == ELFMAG3;
+}
+
+/*
   elf_segments_alloc allocates the ELF segments from the file specified by
   "file" and the Elf header specified by "ehdr" which have the flags "flags".
 */
