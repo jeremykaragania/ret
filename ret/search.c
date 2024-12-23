@@ -1,4 +1,5 @@
 #include <search.h>
+#include <stdio.h>
 
 /*
   print_search prints the ROP gadgets in the segments specified by "segments".
@@ -10,6 +11,8 @@ void print_search(struct list* segments) {
   */
   int i = 0;
   struct list* curr = segments;
+  const char* format_0 = "%016lx: %s\n";
+  const char* format_1 = "\033[0;94m%016lx\033[0m: %s\n";
   char asm_buf_0[128];
   char asm_buf_1[128];
   char* asm_bufs[2] = {
@@ -17,6 +20,12 @@ void print_search(struct list* segments) {
     asm_buf_1
   };
 
+  /*
+    If stdout refers to a terminal, then we don't print ANSI escape sequences.
+  */
+  if (isatty(STDOUT_FILENO)) {
+    format_0 = format_1;
+  }
 
   while(curr) {
     struct segment_info* segment = (struct segment_info*)curr->data;
@@ -35,7 +44,7 @@ void print_search(struct list* segments) {
         previous instruction.
       */
       if (ud_insn_mnemonic(&u) == UD_Iret) {
-        printf("%016lx: %s\n", segment->addr + ud_insn_off(&u), asm_bufs[i]);
+        printf(format_0, segment->addr + ud_insn_off(&u), asm_bufs[i]);
       }
 
       i = !i;
