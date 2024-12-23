@@ -13,6 +13,7 @@ void print_search(struct list* segments) {
   struct list* curr = segments;
   const char* format_0 = "%016lx: %s\n";
   const char* format_1 = "\033[0;94m%016lx\033[0m: %s\n";
+  uint64_t insn_off;
   char asm_buf_0[128];
   char asm_buf_1[128];
   char* asm_bufs[2] = {
@@ -45,9 +46,10 @@ void print_search(struct list* segments) {
         previous instruction.
       */
       if (ud_insn_mnemonic(&u) == UD_Iret) {
-        printf(format_0, segment->addr + ud_insn_off(&u), asm_bufs[i]);
+        printf(format_0, segment->addr + insn_off, asm_bufs[i]);
       }
 
+      insn_off = ud_insn_off(&u);
       i = !i;
     }
 
