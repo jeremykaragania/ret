@@ -13,7 +13,7 @@ make
 
 ## Usage
 ```bash
-./ret file
+./ret [-b base] elffile
 ```
 
 ## License
