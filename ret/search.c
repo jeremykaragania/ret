@@ -2,9 +2,10 @@
 #include <stdio.h>
 
 /*
-  print_search prints the ROP gadgets in the segments specified by "segments".
+  print_search prints the ROP gadgets in the segments specified by the search
+  information "search" and the segments "segments".
 */
-void print_search(struct list* segments) {
+void print_search(struct search_info* search, struct list* segments) {
   /*
     Since we can only disassemble one instruction at a time, we have to keep
     two buffers: one for the current and previous instruction.
@@ -25,7 +26,7 @@ void print_search(struct list* segments) {
     If stdout doesn't refer to a terminal, then we don't print ANSI escape
     sequences.
   */
-  if (isatty(STDOUT_FILENO)) {
+  if (isatty(fileno(stdout))) {
     format_0 = format_1;
   }
 
@@ -46,7 +47,7 @@ void print_search(struct list* segments) {
         previous instruction.
       */
       if (ud_insn_mnemonic(&u) == UD_Iret) {
-        printf(format_0, segment->addr + insn_off, asm_bufs[i]);
+        printf(format_0, search->base + segment->addr + insn_off, asm_bufs[i]);
       }
 
       insn_off = ud_insn_off(&u);

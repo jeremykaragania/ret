@@ -1,22 +1,50 @@
 #include <file.h>
 #include <list.h>
 #include <search.h>
+#include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
-char* program = "ret";
-char* usage = "file";
+char* program;
+char* optstring = ":b:";
+
+void usage() {
+  char* usagestring = "[-b base] elffile";
+  fprintf(stderr, "Usage: %s %s\n", program, usagestring);
+  exit(EXIT_FAILURE);
+}
 
 int main(int argc, char** argv) {
   struct file_info* file;
+  struct search_info search;
   Elf64_Ehdr header;
   struct list* segments;
+  int opt;
 
-  if (argc != 2) {
-    fprintf(stderr, "Usage: %s %s\n", argv[0], usage);
-    exit(EXIT_FAILURE);
+  program = argv[0];
+
+  if (argc < 2) {
+    usage();
   }
 
-  file = file_open(argv[1]);
+  search.base = 0;
+  opt = 1;
+
+  while((opt = getopt(argc, argv, optstring)) > 0) {
+    switch (opt) {
+      case 'b':
+        search.base = strtoll(optarg, NULL, 16);
+        break;
+      default:
+        usage();
+    }
+  }
+
+  if (optind != argc - 1) {
+    usage();
+  }
+
+  file = file_open(argv[optind]);
 
   if (file->fd < 0) {
     fprintf(stderr, "%s: %s: No such file or directory\n", program, file->pathname);
@@ -44,10 +72,11 @@ int main(int argc, char** argv) {
 
   elf_segments_alloc(file, &header, &segments, PF_X);
 
-  print_search(segments);
+  print_search(&search, segments);
 
   elf_segments_free(&segments);
   list_free(&segments);
+
   file_close(file);
 
   return 0;
