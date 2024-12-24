@@ -7,6 +7,15 @@
 #include <unistd.h>
 
 /*
+  instruction_info represents instruction information.
+*/
+struct instruction_info {
+  int mnemonic;
+  uint64_t off;
+  char buf[128];
+};
+
+/*
   search_info represents search information. It is specified by a base address
   "base".
 */

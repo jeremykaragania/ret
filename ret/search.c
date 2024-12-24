@@ -14,17 +14,10 @@ void print_search(struct search_info* search, struct list* segments) {
   struct list* curr = segments;
   const char* format_0 = "%016lx: %s\n";
   const char* format_1 = "\033[0;94m%016lx\033[0m: %s\n";
-  uint64_t insn_off;
-  char asm_buf_0[128];
-  char asm_buf_1[128];
-  char* asm_bufs[2] = {
-    asm_buf_0,
-    asm_buf_1
-  };
+  struct instruction_info insns[2];
 
   /*
-    If stdout doesn't refer to a terminal, then we don't print ANSI escape
-    sequences.
+    If stdout refers to a terminal, then we print ANSI escape sequences.
   */
   if (isatty(fileno(stdout))) {
     format_0 = format_1;
@@ -40,17 +33,19 @@ void print_search(struct search_info* search, struct list* segments) {
     ud_set_syntax(&u, UD_SYN_ATT);
 
     while(ud_disassemble(&u)) {
-      ud_set_asm_buffer(&u, asm_bufs[i], 128);
+      ud_set_asm_buffer(&u, insns[i].buf, 128);
+
+      insns[i].mnemonic = ud_insn_mnemonic(&u);
+      insns[i].off = ud_insn_off(&u);
 
       /*
         If the current instruction is a return instruction, then print the
         previous instruction.
       */
-      if (ud_insn_mnemonic(&u) == UD_Iret) {
-        printf(format_0, search->base + segment->addr + insn_off, asm_bufs[i]);
+      if (insns[i].mnemonic == UD_Iret) {
+        printf(format_0, search->base + segment->addr + insns[!i].off, insns[i].buf);
       }
 
-      insn_off = ud_insn_off(&u);
       i = !i;
     }
 
