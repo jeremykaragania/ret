@@ -14,7 +14,13 @@ void print_search(struct search_info* search, struct list* segments) {
   struct list* curr = segments;
   const char* format_0 = "%016lx: ";
   const char* format_1 = "\033[0;94m%016lx\033[0m: ";
-  struct instruction_info* insns = malloc(search->gadget_length * sizeof(struct instruction_info));
+  struct instruction_info* insns;
+
+  if (search->gadget_length == 0) {
+    return;
+  }
+
+  insns = malloc(search->gadget_length * sizeof(struct instruction_info));
 
   /*
     If stdout refers to a terminal, then we print ANSI escape sequences.
