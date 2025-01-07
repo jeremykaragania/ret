@@ -10,11 +10,11 @@ void print_search(struct search_info* search, struct list* segments) {
     Since we can only disassemble one instruction at a time, we have to keep
     two buffers: one for the current and previous instruction.
   */
-  int i = 0;
+  size_t i = 0;
   struct list* curr = segments;
-  const char* format_0 = "%016lx: %s\n";
-  const char* format_1 = "\033[0;94m%016lx\033[0m: %s\n";
-  struct instruction_info insns[2];
+  const char* format_0 = "%016lx: ";
+  const char* format_1 = "\033[0;94m%016lx\033[0m: ";
+  struct instruction_info* insns = malloc(search->gadget_length * sizeof(struct instruction_info));
 
   /*
     If stdout refers to a terminal, then we print ANSI escape sequences.
@@ -31,24 +31,38 @@ void print_search(struct search_info* search, struct list* segments) {
     ud_set_input_buffer(&u, segment->buf.addr, segment->buf.size);
     ud_set_mode(&u, 64);
     ud_set_syntax(&u, UD_SYN_ATT);
+    ud_set_asm_buffer(&u, insns[i].buf, 128);
 
     while(ud_disassemble(&u)) {
-      ud_set_asm_buffer(&u, insns[i].buf, 128);
-
       insns[i].mnemonic = ud_insn_mnemonic(&u);
       insns[i].off = ud_insn_off(&u);
 
       /*
         If the current instruction is a return instruction, then print the
-        previous instruction.
+        previous instructions.
       */
       if (insns[i].mnemonic == UD_Iret) {
-        printf(format_0, search->base + segment->addr + insns[!i].off, insns[i].buf);
+        size_t j = 0;
+        size_t k = (i + 1 + j) % search->gadget_length;
+
+        printf(format_0, insns[k].off);
+
+        while (j < search->gadget_length - 1) {
+          printf("%s; ", insns[k].buf);
+
+          ++j;
+          k = (i + 1 + j) % search->gadget_length;
+        }
+
+        printf("%s\n", insns[i].buf);
       }
 
-      i = !i;
+      i = (i + 1) % search->gadget_length;
+      ud_set_asm_buffer(&u, insns[i].buf, 128);
     }
 
     curr = curr->next;
   }
+
+  free(insns);
 }

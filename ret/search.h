@@ -21,6 +21,7 @@ struct instruction_info {
 */
 struct search_info {
   uint64_t base;
+  size_t gadget_length;
 };
 
 void print_search(struct search_info* search, struct list* segments);
