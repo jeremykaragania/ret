@@ -45,7 +45,7 @@ void print_search(struct search_info* search, struct list* segments) {
         size_t j = 0;
         size_t k = (i + 1 + j) % search->gadget_length;
 
-        printf(format_0, insns[k].off);
+        printf(format_0, search->base + segment->addr + insns[k].off);
 
         while (j < search->gadget_length - 1) {
           printf("%s; ", insns[k].buf);
