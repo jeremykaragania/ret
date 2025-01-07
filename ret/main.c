@@ -6,10 +6,10 @@
 #include <unistd.h>
 
 char* program;
-char* optstring = ":b:";
+char* optstring = ":b:l:";
 
 void usage() {
-  char* usagestring = "[-b base] elffile";
+  char* usagestring = "[-b base] [-l length] elffile";
   fprintf(stderr, "Usage: %s %s\n", program, usagestring);
   exit(EXIT_FAILURE);
 }
@@ -28,12 +28,16 @@ int main(int argc, char** argv) {
   }
 
   search.base = 0;
+  search.gadget_length = 2;
   opt = 1;
 
   while((opt = getopt(argc, argv, optstring)) > 0) {
     switch (opt) {
       case 'b':
         search.base = strtoll(optarg, NULL, 16);
+        break;
+      case 'l':
+        search.gadget_length = strtoll(optarg, NULL, 10);
         break;
       default:
         usage();
