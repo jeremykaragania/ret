@@ -8,8 +8,7 @@
 void print_search(struct search_info* search, struct list* segments) {
   size_t i = 0;
   struct list* curr = segments;
-  const char* format_0 = "%016lx: ";
-  const char* format_1 = "\033[0;94m%016lx\033[0m: ";
+  const char* format = "%016lx: ";
   struct instruction_info* insns;
   size_t invalid_count = 0;
   int do_print = 1;
@@ -19,13 +18,6 @@ void print_search(struct search_info* search, struct list* segments) {
   }
 
   insns = malloc(search->gadget_length * sizeof(struct instruction_info));
-
-  /*
-    If stdout refers to a terminal, then we print ANSI escape sequences.
-  */
-  if (isatty(fileno(stdout))) {
-    format_0 = format_1;
-  }
 
   while(curr) {
     struct segment_info* segment = (struct segment_info*)curr->data;
@@ -59,7 +51,7 @@ void print_search(struct search_info* search, struct list* segments) {
         size_t j = 0;
         size_t k = (i + 1 + j) % search->gadget_length;
 
-        printf(format_0, search->base + segment->addr + insns[k].off);
+        printf(format, search->base + segment->addr + insns[k].off);
 
         while (j < search->gadget_length - 1) {
           printf("%s; ", insns[k].buf);
