@@ -6,10 +6,6 @@
   information "search" and the segments "segments".
 */
 void print_search(struct search_info* search, struct list* segments) {
-  /*
-    Since we can only disassemble one instruction at a time, we have to keep
-    two buffers: one for the current and previous instruction.
-  */
   size_t i = 0;
   struct list* curr = segments;
   const char* format_0 = "%016lx: ";
