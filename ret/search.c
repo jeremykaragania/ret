@@ -15,6 +15,8 @@ void print_search(struct search_info* search, struct list* segments) {
   const char* format_0 = "%016lx: ";
   const char* format_1 = "\033[0;94m%016lx\033[0m: ";
   struct instruction_info* insns;
+  size_t invalid_count = 0;
+  int do_print = 1;
 
   if (search->gadget_length == 0) {
     return;
@@ -44,10 +46,20 @@ void print_search(struct search_info* search, struct list* segments) {
       insns[i].off = ud_insn_off(&u);
 
       /*
-        If the current instruction is a return instruction, then print the
-        previous instructions.
+        If the current instruction is invalid then we don't print anything in
+        the instruction cache until it leaves the cache.
       */
-      if (insns[i].mnemonic == UD_Iret) {
+      if (insns[i].mnemonic == UD_Iinvalid) {
+        do_print = 0;
+        invalid_count = 0;
+      }
+
+      /*
+        If there are no invalid instructions in the cache and the current
+        instruction is a return instruction, then print the previous
+        instructions.
+      */
+      if (do_print && insns[i].mnemonic == UD_Iret) {
         size_t j = 0;
         size_t k = (i + 1 + j) % search->gadget_length;
 
@@ -61,6 +73,21 @@ void print_search(struct search_info* search, struct list* segments) {
         }
 
         printf("%s\n", insns[i].buf);
+      }
+
+      /*
+        If there is an invalid instruction in the cache, then we increment the
+        counter until it leaves.
+      */
+      if (!do_print) {
+        ++invalid_count;
+      }
+
+      /*
+        If an invalid instruction has left the cache then we can print again.
+      */
+      if (invalid_count == search->gadget_length) {
+        do_print = 1;
       }
 
       i = (i + 1) % search->gadget_length;
