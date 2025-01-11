@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
         search.base = strtoll(optarg, NULL, 16);
         break;
       case 'l':
-        search.gadget_length = strtoll(optarg, NULL, 10);
+        search.gadget_length = strtoll(optarg, NULL, 10) + 1;
         break;
       default:
         usage();
