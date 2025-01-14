@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
     usage();
   }
 
+  search.has_base = 0;
   search.base = 0;
   search.gadget_length = 2;
   opt = 1;
@@ -34,6 +35,7 @@ int main(int argc, char** argv) {
   while((opt = getopt(argc, argv, optstring)) > 0) {
     switch (opt) {
       case 'b':
+        search.has_base = 1;
         search.base = strtoll(optarg, NULL, 16);
         break;
       case 'l':

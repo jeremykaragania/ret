@@ -29,6 +29,10 @@ void print_search(struct search_info* search, struct list* segments) {
     ud_set_syntax(&u, UD_SYN_ATT);
     ud_set_asm_buffer(&u, insns[i].buf, 128);
 
+    if (!search->has_base) {
+      search->base = segment->addr;
+    }
+
     while(ud_disassemble(&u)) {
       insns[i].mnemonic = ud_insn_mnemonic(&u);
       insns[i].off = ud_insn_off(&u);
@@ -51,7 +55,7 @@ void print_search(struct search_info* search, struct list* segments) {
         size_t j = 0;
         size_t k = (i + 1 + j) % search->gadget_length;
 
-        printf(format, search->base + segment->addr + insns[k].off);
+        printf(format, search->base + insns[k].off);
 
         while (j < search->gadget_length - 1) {
           printf("%s; ", insns[k].buf);

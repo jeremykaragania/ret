@@ -20,6 +20,7 @@ struct instruction_info {
   "base".
 */
 struct search_info {
+  int has_base;
   uint64_t base;
   size_t gadget_length;
 };
