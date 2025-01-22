@@ -36,10 +36,10 @@ int main(int argc, char** argv) {
     switch (opt) {
       case 'b':
         search.has_base = 1;
-        search.base = strtoll(optarg, NULL, 16);
+        search.base = strtoull(optarg, NULL, 16);
         break;
       case 'l':
-        search.gadget_length = strtoll(optarg, NULL, 10) + 1;
+        search.gadget_length = strtoull(optarg, NULL, 10) + 1;
         break;
       default:
         usage();
