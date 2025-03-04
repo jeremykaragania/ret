@@ -6,12 +6,19 @@
 */
 struct file_info* file_open(char* pathname) {
   struct file_info* ret;
+  int fstat_ret;
   struct stat sb;
 
   ret = malloc(sizeof(struct file_info));
   ret->pathname = pathname;
   ret->fd = open(pathname, O_RDONLY);
-  fstat(ret->fd, &sb);
+
+  fstat_ret = fstat(ret->fd, &sb);
+
+  if (fstat_ret < 0) {
+    ret->pathname = NULL;
+  }
+
   ret->buf.size = sb.st_size;
   ret->buf.addr = mmap(NULL, ret->buf.size, PROT_READ, MAP_PRIVATE, ret->fd, 0);
 

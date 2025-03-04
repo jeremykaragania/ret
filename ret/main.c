@@ -57,6 +57,11 @@ int main(int argc, char** argv) {
     exit(EXIT_FAILURE);
   }
 
+  if (!file->pathname) {
+    fprintf(stderr, "%s: error: fstat failed\n", program);
+    exit(EXIT_FAILURE);
+  }
+
   if (file->buf.addr == MAP_FAILED) {
     fprintf(stderr, "%s: error: mmap failed\n", program);
     exit(EXIT_FAILURE);
