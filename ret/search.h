@@ -6,6 +6,8 @@
 #include <udis86.h>
 #include <unistd.h>
 
+#define INVALID_MNEMONICS_SIZE 2
+
 /*
   instruction_info represents instruction information.
 */

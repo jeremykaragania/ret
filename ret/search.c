@@ -1,6 +1,8 @@
 #include <search.h>
 #include <stdio.h>
 
+static int invalid_mnemonics[INVALID_MNEMONICS_SIZE] = {UD_Ileave, UD_Iinvalid};
+
 /*
   print_search prints the ROP gadgets in the segments specified by the search
   information "search" and the segments "segments".
@@ -41,9 +43,11 @@ void print_search(struct search_info* search, struct list* segments) {
         If the current instruction is invalid then we don't print anything in
         the instruction cache until it leaves the cache.
       */
-      if (insns[i].mnemonic == UD_Iinvalid) {
-        do_print = 0;
-        invalid_count = 0;
+      for (size_t j = 0; j < INVALID_MNEMONICS_SIZE; ++j) {
+        if (insns[i].mnemonic == invalid_mnemonics[j]) {
+          do_print = 0;
+          invalid_count = 0;
+        }
       }
 
       /*
