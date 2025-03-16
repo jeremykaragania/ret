@@ -69,6 +69,12 @@ void print_search(struct search_info* search, struct list* segments) {
         }
 
         printf("%s\n", insns[i].buf);
+
+        struct instruction_info* insn = &insns[(k - 1) % search->gadget_length];
+        if (strcmp(insn->buf, "pop %r15") == 0) {
+          printf(format, search->base + insn->off + 1);
+          printf("pop %%rdi; ret\n");
+        }
       }
 
       /*

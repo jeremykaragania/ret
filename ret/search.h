@@ -3,6 +3,7 @@
 
 #include <file.h>
 #include <stdio.h>
+#include <string.h>
 #include <udis86.h>
 #include <unistd.h>
 
