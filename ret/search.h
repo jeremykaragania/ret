@@ -2,6 +2,7 @@
 #define SEARCH_H
 
 #include <file.h>
+#include <list.h>
 #include <stdio.h>
 #include <string.h>
 #include <udis86.h>
@@ -23,11 +24,12 @@ struct instruction_info {
   "base".
 */
 struct search_info {
+  struct list* segments;
   int has_base;
   uint64_t base;
   size_t gadget_length;
 };
 
-void print_search(struct search_info* search, struct list* segments);
+void print_search(struct search_info* search);
 
 #endif

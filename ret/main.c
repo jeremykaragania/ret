@@ -80,10 +80,11 @@ int main(int argc, char** argv) {
   }
 
   segments = list_alloc(NULL);
+  search.segments = segments;
 
   elf_segments_alloc(file, &header, &segments, PF_X);
 
-  print_search(&search, segments);
+  print_search(&search);
 
   elf_segments_free(&segments);
   list_free(&segments);

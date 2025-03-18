@@ -5,11 +5,11 @@ static int invalid_mnemonics[INVALID_MNEMONICS_SIZE] = {UD_Ileave, UD_Iinvalid};
 
 /*
   print_search prints the ROP gadgets in the segments specified by the search
-  information "search" and the segments "segments".
+  information "search".
 */
-void print_search(struct search_info* search, struct list* segments) {
+void print_search(struct search_info* search) {
   size_t i = 0;
-  struct list* curr = segments;
+  struct list* curr = search->segments;
   const char* format = "%016lx: ";
   struct instruction_info* insns;
   size_t invalid_count = 0;
