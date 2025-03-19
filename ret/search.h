@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 #define INVALID_MNEMONICS_SIZE 2
+#define CONTROL_FLOW_MNEMONICS_SIZE 3
 
 /*
   instruction_info represents instruction information.

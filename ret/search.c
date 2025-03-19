@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 static int invalid_mnemonics[INVALID_MNEMONICS_SIZE] = {UD_Ileave, UD_Iinvalid};
+static int control_flow_mnemonics[CONTROL_FLOW_MNEMONICS_SIZE] = {UD_Icall, UD_Ijmp, UD_Iret};
 
 /*
   print_search prints the ROP gadgets in the segments specified by the search
@@ -52,28 +53,30 @@ void print_search(struct search_info* search) {
 
       /*
         If there are no invalid instructions in the cache and the current
-        instruction is a return instruction, then print the previous
+        instruction is a control flow instruction, then print the previous
         instructions.
       */
-      if (do_print && insns[i].mnemonic == UD_Iret) {
-        size_t j = 0;
-        size_t k = (i + 1 + j) % search->gadget_length;
+      for (size_t j = 0; j < CONTROL_FLOW_MNEMONICS_SIZE; ++j) {
+        if (do_print && insns[i].mnemonic == control_flow_mnemonics[j]) {
+          size_t j = 0;
+          size_t k = (i + 1 + j) % search->gadget_length;
 
-        printf(format, search->base + insns[k].off);
+          printf(format, search->base + insns[k].off);
 
-        while (j < search->gadget_length - 1) {
-          printf("%s; ", insns[k].buf);
+          while (j < search->gadget_length - 1) {
+            printf("%s; ", insns[k].buf);
 
-          ++j;
-          k = (i + 1 + j) % search->gadget_length;
-        }
+            ++j;
+            k = (i + 1 + j) % search->gadget_length;
+          }
 
-        printf("%s\n", insns[i].buf);
+          printf("%s\n", insns[i].buf);
 
-        struct instruction_info* insn = &insns[(k - 1) % search->gadget_length];
-        if (strcmp(insn->buf, "pop %r15") == 0) {
-          printf(format, search->base + insn->off + 1);
-          printf("pop %%rdi; ret\n");
+          struct instruction_info* insn = &insns[(k - 1) % search->gadget_length];
+          if (strcmp(insn->buf, "pop %r15") == 0) {
+            printf(format, search->base + insn->off + 1);
+            printf("pop %%rdi; ret\n");
+          }
         }
       }
 
