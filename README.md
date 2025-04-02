@@ -5,28 +5,28 @@ An x86-64 ROP gadget search command-line utility.
 - [udis86](https://github.com/vmt/udis86)
 
 ## Installation
-```bash
+```sh
 $ git clone https://github.com/jeremykaragania/ret.git
 $ cd ret/ret
 $ make
 ```
 
 ## Usage
-```bash
+```sh
 $ ./ret [-b base] [-l length] elffile
 ```
 
 ## Examples
 Print ROP gadgets with four instructions.
-```bash
+```sh
 $ ./ret -l 4 elffile
  ```
 Print sorted ROP gadgets.
-```bash
+```sh
 $ ./ret elffile | sort -k 1.17
  ```
 Print sorted unique ROP gadgets.
-```bash
+```sh
 $ ./ret elffile | sort -k 1.17 | uniq -s 17
 ```
 
