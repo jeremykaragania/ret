@@ -6,16 +6,13 @@
 */
 struct file_info* file_open(char* pathname) {
   struct file_info* ret;
-  int fstat_ret;
   struct stat sb;
 
   ret = malloc(sizeof(struct file_info));
   ret->pathname = pathname;
   ret->fd = open(pathname, O_RDONLY);
 
-  fstat_ret = fstat(ret->fd, &sb);
-
-  if (fstat_ret < 0) {
+  if (fstat(ret->fd, &sb) < 0) {
     ret->pathname = NULL;
   }
 
